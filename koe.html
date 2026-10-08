@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>仮装パートへの声｜79緑 仮装ひろば</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="index.html">← 仮装ひろば</a>
+  <header>
+    <h1>仮装パートへの声</h1>
+  </header>
+  <p class="lead">準備で不安なこと、意見、質問など、なんでも送ってください。ここに送ったものは仮装パートだけが読みます。</p>
+
+  <form class="card" id="f" autocomplete="off">
+    <div class="field">
+      <span id="catLabel"><b>どんな声？</b> <span class="hint">選ばなくてもOK</span></span>
+      <div class="chips" id="cat" role="group" aria-labelledby="catLabel"></div>
+    </div>
+    <div class="field">
+      <label for="text">内容</label>
+      <textarea id="text" maxlength="1000"></textarea>
+    </div>
+    <div class="field">
+      <label for="name">名前 <span class="hint">空欄なら匿名</span></label>
+      <input type="text" id="name" maxlength="30">
+    </div>
+    <input type="text" id="hp" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px" autocomplete="off">
+    <div><button class="send" id="send" type="submit">送る</button></div>
+    <p class="toast" id="toast" role="status"></p>
+  </form>
+</main>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+const H = window.Hiroba;
+const $ = id => document.getElementById(id);
+const cat = H.chipGroup($('cat'), ['準備で不安なこと', '意見', '質問', 'その他']);
+
+if (H.isClosed()) {
+  $('f').outerHTML = '<p class="closed">受付は10月31日で終わりました。ありがとうございました。</p>';
+}
+
+$('f') && $('f').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const text = $('text').value.trim();
+  if (!text) { H.toast($('toast'), '内容を書いてから送ってください。', true); return; }
+  $('send').disabled = true;
+  try {
+    await H.post({ type: 'voice', category: cat.value(), text, name: $('name').value, hp: $('hp').value });
+    $('text').value = ''; cat.reset();
+    H.toast($('toast'), '送りました。ありがとう。');
+  } catch (e) {
+    H.toast($('toast'), H.errorText(e), true);
+  } finally {
+    $('send').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

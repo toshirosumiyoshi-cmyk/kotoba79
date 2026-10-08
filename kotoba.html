@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ことばを置く｜79緑 仮装ひろば</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="index.html">← 仮装ひろば</a>
+  <header>
+    <h1>ことばを置く</h1>
+  </header>
+  <p class="lead">仮装のテーマを考えるうえで、思いついた言葉・最近気になっている言葉を教えてください。なんでもいいです。1つずつ、何回でも置けます。</p>
+
+  <form class="card" id="f" autocomplete="off">
+    <div class="field">
+      <label for="word">ことば</label>
+      <div class="row">
+        <input type="text" id="word" maxlength="40" placeholder="例：月、砂漠、時計、竜宮城">
+        <button class="send" id="send" type="submit">置く</button>
+      </div>
+    </div>
+
+    <details id="more">
+      <summary>くわしく書く（なくてもOK）</summary>
+      <div>
+        <div class="field">
+          <label for="note">そのことばについて <span class="hint">なぜ思いついたか、どんなイメージか</span></label>
+          <textarea id="note" maxlength="300"></textarea>
+        </div>
+        <div class="field">
+          <span id="areaLabel"><b>舞台の地域</b> <span class="hint">近いものを1つ</span></span>
+          <div class="chips" id="area" role="group" aria-labelledby="areaLabel"></div>
+        </div>
+        <div class="field">
+          <span id="kindLabel"><b>題材の種類</b> <span class="hint">近いものを1つ</span></span>
+          <div class="chips" id="kind" role="group" aria-labelledby="kindLabel"></div>
+          <p class="hint">歴史＝実際の出来事や時代／伝承・物語＝神話・伝説・昔話・映画など／文化・祭＝祭りや行事そのもの／オリジナル＝独自の物語や抽象的なもの</p>
+        </div>
+      </div>
+    </details>
+    <input type="text" id="hp" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px" autocomplete="off">
+    <p class="toast" id="toast" role="status"></p>
+  </form>
+
+  <section>
+    <h2>ことばの壁 <span class="hint" id="count"></span></h2>
+    <p class="hint">みんなが置いたことば。見て思いついたら、また置いてください。</p>
+    <div class="wall" id="wall"><p class="empty">読み込み中…</p></div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="common.js"></script>
+<script>
+const H = window.Hiroba;
+const area = H.chipGroup(document.getElementById('area'), ['日本', '中華', '西洋', 'その他の異国', '架空・抽象']);
+const kind = H.chipGroup(document.getElementById('kind'), ['歴史', '伝承・物語', '文化・祭', 'オリジナル']);
+const $ = id => document.getElementById(id);
+const mine = new Set();
+
+if (H.isClosed()) {
+  $('f').outerHTML = '<p class="closed">受付は10月31日で終わりました。たくさんのことば、ありがとうございました。</p>';
+}
+
+$('f') && $('f').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const word = $('word').value.trim();
+  if (!word) { H.toast($('toast'), '何か書いてから置いてください。', true); return; }
+  $('send').disabled = true;
+  try {
+    await H.post({ type: 'word', word, note: $('note').value, area: area.value(), kind: kind.value(), hp: $('hp').value });
+    mine.add(word);
+    $('word').value = ''; $('note').value = ''; area.reset(); kind.reset();
+    H.toast($('toast'), '「' + word + '」を置きました。ほかにもあれば続けてどうぞ。');
+    loadWall();
+    $('word').focus();
+  } catch (e) {
+    H.toast($('toast'), H.errorText(e), true);
+  } finally {
+    $('send').disabled = false;
+  }
+});
+
+async function loadWall() {
+  try {
+    const d = await H.get('words');
+    const wall = $('wall');
+    wall.textContent = '';
+    if (!d.words || !d.words.length) {
+      wall.innerHTML = '<p class="empty">まだありません。最初のひとつをどうぞ。</p>';
+      $('count').textContent = '';
+      return;
+    }
+    $('count').textContent = d.total + '個';
+    d.words.forEach(w => {
+      const s = document.createElement('span');
+      s.className = 'word' + (mine.has(w.w) ? ' mine' : '');
+      s.textContent = w.w;
+      if (w.n > 1) { const c = document.createElement('small'); c.textContent = '×' + w.n; s.appendChild(c); }
+      wall.appendChild(s);
+    });
+  } catch (e) {
+    $('wall').innerHTML = '<p class="empty">ことばの壁を読み込めませんでした。少しあとで開き直してください。</p>';
+  }
+}
+loadWall();
+setInterval(() => { if (!document.hidden) loadWall(); }, 30000);
+</script>
+</body>
+</html>

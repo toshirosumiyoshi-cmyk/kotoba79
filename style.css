@@ -1,0 +1,66 @@
+/* 79緑 仮装ひろば：1カラム、緑の葉と土の色。ことばはチップで並べる */
+:root{
+  --bg:#f2f6f0; --surface:#ffffff; --fg:#16241b; --muted:#5b6e61; --line:#d3ded4;
+  --leaf:#1f7a4a; --leaf-ink:#ffffff; --leaf-soft:#dcefe2; --soil:#7a5a36; --warn:#b3541e;
+  --display:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f1712; --surface:#17221a; --fg:#e5eee7; --muted:#9bb0a1; --line:#2b3a2f;
+    --leaf:#5fc48a; --leaf-ink:#0f1712; --leaf-soft:#1e3828; --soil:#c9a57a; --warn:#f0a26f; color-scheme:dark }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;
+  padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+h1,h2{font-family:var(--display);line-height:1.35;margin:0;text-wrap:balance}
+h1{font-size:1.75rem}
+h2{font-size:1.2rem}
+p{margin:0}
+a{color:var(--leaf)}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;color:var(--muted)}
+.lead{color:var(--muted)}
+.back{font-size:.9rem;text-decoration:none}
+
+.doors{display:grid;gap:14px}
+.door{display:flex;flex-direction:column;gap:4px;padding:22px 20px;border-radius:16px;text-decoration:none;
+  background:var(--surface);border:1.5px solid var(--line);color:var(--fg)}
+.door.main{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
+.door b{font-family:var(--display);font-size:1.3rem}
+.door span{font-size:.9rem;opacity:.85}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+label{font-weight:700;font-size:.95rem}
+.hint{font-weight:400;color:var(--muted);font-size:.85rem}
+input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);
+  border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:7em;resize:vertical}
+.row{display:flex;gap:8px}
+.row input{flex:1;min-width:0}
+button{font:inherit;cursor:pointer}
+.send{background:var(--leaf);color:var(--leaf-ink);border:0;border-radius:10px;padding:10px 20px;font-weight:700;white-space:nowrap}
+.send:disabled{opacity:.5;cursor:default}
+.field{display:flex;flex-direction:column;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--leaf-soft);border-color:var(--leaf)}
+details summary{cursor:pointer;color:var(--muted);font-size:.9rem}
+details[open] summary{margin-bottom:10px}
+details > div{display:flex;flex-direction:column;gap:14px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+
+.toast{min-height:1.6em;font-size:.9rem;color:var(--leaf)}
+.toast.err{color:var(--warn)}
+
+.wall{display:flex;flex-wrap:wrap;gap:8px}
+.word{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-family:var(--display);
+  animation:pop .35s ease-out}
+.word small{color:var(--muted);font-family:var(--body);margin-left:4px}
+.word.mine{border-color:var(--soil)}
+.empty{color:var(--muted);font-size:.95rem}
+.closed{background:var(--surface);border:1.5px dashed var(--line);border-radius:14px;padding:18px;color:var(--muted)}
+@keyframes pop{from{transform:scale(.85)}to{transform:none}}
+@media (prefers-reduced-motion: reduce){.word{animation:none}}
+footer{color:var(--muted);font-size:.8rem}
