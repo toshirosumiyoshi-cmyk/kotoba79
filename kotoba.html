@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ことばのひろば｜79緑 仮装のひろば</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <main class="wrap">
@@ -53,8 +53,8 @@
   </section>
 </main>
 
-<script src="config.js"></script>
-<script src="common.js"></script>
+<script src="config.js?v=3"></script>
+<script src="common.js?v=3"></script>
 <script>
 const H = window.Hiroba;
 const $ = id => document.getElementById(id);
@@ -131,11 +131,12 @@ function render(force) {
   lanes.forEach((items, li) => {
     const lane = document.createElement('div');
     lane.className = 'lane' + (li % 2 ? ' rev' : '');
+    lane.style.display = 'flex'; lane.style.width = 'max-content'; // 見た目の読み込みが遅れても横1列にする
     sea.appendChild(lane);
-    // 1周ぶん：画面幅より長くなるまで並べる
+    // 1周ぶん：画面幅より長くなるまで並べる（くり返しは最大4回）
     let guard = 0;
     do { items.forEach(it => lane.appendChild(bubble(it, isFresh(it)))); guard++; }
-    while (lane.scrollWidth < width + 40 && guard < 20);
+    while (lane.scrollWidth < width + 40 && guard < 4);
     // 同じものをもう1周ぶん並べて、切れ目なくつなぐ
     const half = [...lane.children];
     half.forEach(n => { const c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true'); lane.appendChild(c); });
