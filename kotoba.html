@@ -10,9 +10,8 @@
 <body>
 <main class="wrap">
   <a class="back" href="index.html">← 仮装のひろば</a>
-  <header class="pagehead">
-    <h1>ことばの<wbr>ひろば</h1>
-    <img src="images/book_hirameki_keihatsu_woman.png" alt="">
+  <header>
+    <h1>ことばのひろば</h1>
   </header>
   <p class="lead">仮装のテーマを考えるうえで、思いついた言葉・最近気になっている言葉、なんでもいいので書いていってください！1つずつ書いてくれれば、何回でも送れます！</p>
 
@@ -25,7 +24,7 @@
       </div>
     </div>
 
-    <p class="hint">ここから下は、くわしく書きたいときだけ（なくてもOK）</p>
+    <p class="hint divider">ここから下は、くわしく書きたいときだけ（なくてもOK）</p>
 
     <div class="field">
       <label for="note">そのことばについて <span class="hint">なぜ思いついたか、どんなイメージか</span></label>
@@ -44,23 +43,25 @@
     <p class="toast" id="toast" role="status"></p>
   </form>
 
-  <section>
-    <h2>ことばの壁 <span class="hint" id="count"></span></h2>
-    <p class="hint">みんなはどんな言葉を考えたのかな？</p>
-    <div class="wall" id="wall"><p class="empty">読み込み中…</p></div>
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <div class="seahead">
+      <h2>ことばの海 <span class="hint" id="count"></span></h2>
+      <button class="toggle" id="view" type="button">一覧で見る</button>
+    </div>
+    <p class="hint">みんなはどんな言葉を考えたのかな？　さわると止まります。</p>
+    <div class="sea" id="sea"><p class="empty">読み込み中…</p></div>
   </section>
-
-  <p class="credit">イラスト：<a href="https://www.irasutoya.com/" target="_blank" rel="noopener">いらすとや</a></p>
 </main>
 
 <script src="config.js"></script>
 <script src="common.js"></script>
 <script>
 const H = window.Hiroba;
-const area = H.chipGroup(document.getElementById('area'), ['日本', '中華', '西洋', 'その他の異国', '架空・抽象']);
-const kind = H.chipGroup(document.getElementById('kind'), ['歴史', '伝承・物語', '文化・祭', 'オリジナル']);
 const $ = id => document.getElementById(id);
+const area = H.chipGroup($('area'), ['日本', '中華', '西洋', 'その他の異国', '架空・抽象']);
+const kind = H.chipGroup($('kind'), ['歴史', '伝承・物語', '文化・祭', 'オリジナル']);
 const mine = new Set();
+let words = [], seen = null, sig = '', listMode = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 $('f').addEventListener('submit', async ev => {
   ev.preventDefault();
@@ -72,7 +73,7 @@ $('f').addEventListener('submit', async ev => {
     mine.add(word);
     $('word').value = ''; $('note').value = ''; area.reset(); kind.reset();
     H.toast($('toast'), '「' + word + '」を送りました！ほかにもあれば続けてどうぞ！');
-    loadWall();
+    loadWords();
     $('word').focus();
   } catch (e) {
     H.toast($('toast'), H.errorText(e), true);
@@ -81,30 +82,81 @@ $('f').addEventListener('submit', async ev => {
   }
 });
 
-async function loadWall() {
+$('view').addEventListener('click', () => { listMode = !listMode; render(true); });
+$('sea').addEventListener('click', () => $('sea').classList.toggle('paused'));
+
+// ことば1つぶんの泡。たくさん出たことばほど少し大きく
+function bubble(item, fresh) {
+  const s = document.createElement('span');
+  s.className = 'w' + (mine.has(item.w) ? ' mine' : '') + (fresh ? ' fresh' : '');
+  s.style.fontSize = (1 + Math.min(item.n - 1, 4) * 0.12) + 'rem';
+  s.textContent = item.w;
+  if (item.n > 1) { const c = document.createElement('small'); c.textContent = '×' + item.n; s.appendChild(c); }
+  return s;
+}
+
+function render(force) {
+  const sea = $('sea');
+  const newSig = (listMode ? 'L' : 'S') + JSON.stringify(words) + [...mine].join();
+  if (!force && newSig === sig) return;
+  sig = newSig;
+  $('view').textContent = listMode ? '海で見る' : '一覧で見る';
+  sea.textContent = '';
+  if (!words.length) {
+    sea.innerHTML = '<p class="empty">まだありません。最初のひとつをどうぞ。</p>';
+    return;
+  }
+  const isFresh = item => seen && !seen.has(item.w);
+
+  // 一覧（ことばが少ないとき・動きを減らす設定のとき）
+  if (listMode || words.length < 8) {
+    const box = document.createElement('div');
+    box.className = listMode ? 'list' : 'list-sea';
+    box.style.cssText = 'display:flex;flex-wrap:wrap;gap:10px;padding-inline:18px';
+    words.forEach(it => box.appendChild(bubble(it, isFresh(it))));
+    sea.style.background = listMode ? 'var(--surface)' : '';
+    sea.style.border = listMode ? '2px solid var(--line)' : '';
+    sea.appendChild(box);
+    if (listMode) box.className = 'list';
+    return;
+  }
+  sea.style.background = ''; sea.style.border = '';
+
+  // 海：ことばを何本かの流れに分けて、左右交互に流す
+  const laneCount = Math.max(2, Math.min(8, Math.ceil(words.length / 7)));
+  const lanes = Array.from({ length: laneCount }, () => []);
+  words.forEach((it, i) => lanes[i % laneCount].push(it));
+  const width = sea.clientWidth || 360;
+
+  lanes.forEach((items, li) => {
+    const lane = document.createElement('div');
+    lane.className = 'lane' + (li % 2 ? ' rev' : '');
+    sea.appendChild(lane);
+    // 1周ぶん：画面幅より長くなるまで並べる
+    let guard = 0;
+    do { items.forEach(it => lane.appendChild(bubble(it, isFresh(it)))); guard++; }
+    while (lane.scrollWidth < width + 40 && guard < 20);
+    // 同じものをもう1周ぶん並べて、切れ目なくつなぐ
+    const half = [...lane.children];
+    half.forEach(n => { const c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true'); lane.appendChild(c); });
+    const speed = 22 + (li % 3) * 7; // 1秒に進む量（px）
+    lane.style.setProperty('--dur', Math.max(12, (lane.scrollWidth / 2) / speed) + 's');
+  });
+}
+
+async function loadWords() {
   try {
     const d = await H.get('words');
-    const wall = $('wall');
-    wall.textContent = '';
-    if (!d.words || !d.words.length) {
-      wall.innerHTML = '<p class="empty">まだありません。最初のひとつをどうぞ。</p>';
-      $('count').textContent = '';
-      return;
-    }
-    $('count').textContent = d.total + '個';
-    d.words.forEach(w => {
-      const s = document.createElement('span');
-      s.className = 'word' + (mine.has(w.w) ? ' mine' : '');
-      s.textContent = w.w;
-      if (w.n > 1) { const c = document.createElement('small'); c.textContent = '×' + w.n; s.appendChild(c); }
-      wall.appendChild(s);
-    });
+    words = d.words || [];
+    $('count').textContent = words.length ? (d.total + '個') : '';
+    render(false);
+    seen = new Set(words.map(w => w.w));
   } catch (e) {
-    $('wall').innerHTML = '<p class="empty">ことばの壁を読み込めませんでした。少しあとで開き直してください。</p>';
+    if (!words.length) $('sea').innerHTML = '<p class="empty">ことばの海を読み込めませんでした。少しあとで開き直してください。</p>';
   }
 }
-loadWall();
-setInterval(() => { if (!document.hidden) loadWall(); }, 30000);
+loadWords();
+setInterval(() => { if (!document.hidden) loadWords(); }, 30000);
 </script>
 </body>
 </html>

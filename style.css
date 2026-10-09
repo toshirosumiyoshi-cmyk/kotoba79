@@ -1,58 +1,51 @@
-/* 79緑 仮装のひろば：1カラム。緑と白にピンクをひとさじ、丸ゴシックで、いらすとやのイラストを添える */
+/* 79緑 仮装のひろば：1カラム。緑と白にピンクをひとさじ、丸ゴシック。ことばは「海」に浮かべて流す */
 :root{
-  --bg:#f3f8f1; --dot:#dcebd8; --surface:#ffffff; --fg:#1b2a20; --muted:#5e7065; --line:#d6e3d6;
-  --leaf:#2a8a55; --leaf-ink:#ffffff; --leaf-soft:#dff1e4;
-  --pink:#f6c9d4; --pink-ink:#5a2433; --pink-line:#eaa9b9;
-  --soil:#b07a45; --warn:#c0532a;
+  --bg:#f3f8f1; --dot:#dde9da; --surface:#ffffff; --fg:#15231a; --muted:#46584c; --line:#cfdccf;
+  --leaf:#1f7a4a; --leaf-ink:#ffffff; --leaf-soft:#dcefe2;
+  --pink:#f8d3dc; --pink-ink:#4d1a28; --pink-line:#e39aac;
+  --warn:#b2401a;
+  --sea-top:#cfeee6; --sea-bottom:#4fa9a0; --sea-ink:#0f2e2b; --bubble:#ffffff; --bubble-line:#9fd4cb; --new:#ffe58a;
   --round:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
-  :root{ --bg:#0f1712; --dot:#1a2a1f; --surface:#17221a; --fg:#e6efe8; --muted:#9db1a2; --line:#2c3c30;
-    --leaf:#62c78e; --leaf-ink:#0f1712; --leaf-soft:#1f3a2a;
-    --pink:#4a2a33; --pink-ink:#ffdbe3; --pink-line:#7a4554;
-    --soil:#d9a873; --warn:#f0a26f; color-scheme:dark }
+  :root{ --bg:#0f1712; --dot:#18261c; --surface:#17221a; --fg:#eef5ef; --muted:#b3c4b8; --line:#33463a;
+    --leaf:#6ed49a; --leaf-ink:#0b1510; --leaf-soft:#1f3a2a;
+    --pink:#5a2d3a; --pink-ink:#ffe3ea; --pink-line:#8d5263;
+    --warn:#ffab80;
+    --sea-top:#123a3a; --sea-bottom:#071c22; --sea-ink:#e6fbf7; --bubble:#1c4646; --bubble-line:#3c7f7a; --new:#7a6420; color-scheme:dark }
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.5px,transparent 1.6px);background-size:22px 22px;
   color:var(--fg);font-family:var(--round);font-weight:500;font-size:16px;line-height:1.8;
-  padding-inline:16px;padding-block:24px 64px}
-.wrap{max-width:620px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
-h1,h2{line-height:1.35;margin:0;text-wrap:balance;font-weight:700}
-h1{font-size:1.9rem}
-h2{font-size:1.2rem}
+  padding-inline:16px;padding-block:28px 64px}
+.wrap{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2{line-height:1.35;margin:0;text-wrap:balance;font-weight:700;word-break:keep-all}
+h1{font-size:2rem}
+h2{font-size:1.25rem}
 p{margin:0}
 a{color:var(--leaf)}
-.lead{color:var(--muted)}
-.back{font-size:.9rem;text-decoration:none;font-weight:700}
+.lead{color:var(--fg);font-size:1.02rem}
+.back{font-size:.95rem;text-decoration:none;font-weight:700}
 
-/* トップの見出し：旗をふる2人で名前をはさむ */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:6px;text-align:center}
-.hero img{width:100%;max-width:120px;height:auto;justify-self:center}
-.hero h1{font-size:2.1rem;padding-bottom:10px}
-.hero h1 span{display:block;font-size:.8rem;color:var(--leaf);letter-spacing:.12em}
-
-/* ページの見出し：右にイラスト */
-.pagehead{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.pagehead h1{font-size:1.65rem;word-break:keep-all;min-width:0}
-.pagehead img{width:96px;max-width:30%;height:auto;flex:none}
+.top{display:flex;flex-direction:column;gap:4px}
+.top .sub{color:var(--leaf);font-weight:700;letter-spacing:.12em;font-size:.85rem}
+.top h1{font-size:2.3rem}
 
 .doors{display:grid;gap:14px}
-.door{display:flex;align-items:center;gap:14px;padding:18px 18px;border-radius:22px;text-decoration:none;
-  border:2px solid transparent;color:var(--fg);transition:transform .15s ease}
+.door{display:flex;flex-direction:column;gap:4px;padding:22px 22px;border-radius:22px;text-decoration:none;
+  border:2px solid transparent;transition:transform .15s ease}
 .door:hover{transform:translateY(-2px)}
-.door > div{display:flex;flex-direction:column;gap:2px;min-width:0}
-.door img{width:84px;height:auto;flex:none}
-.door b{font-size:1.3rem}
-.door span{font-size:.9rem;opacity:.9}
+.door b{font-size:1.35rem}
+.door span{font-size:.95rem}
 .door.main{background:var(--leaf);color:var(--leaf-ink)}
 .door.sub{background:var(--pink);color:var(--pink-ink);border-color:var(--pink-line)}
 
 .card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:16px}
-label,.label{font-weight:700;font-size:.95rem}
-.hint{font-weight:500;color:var(--muted);font-size:.85rem}
-.req{color:var(--warn);font-size:.8rem;margin-left:4px}
+label,.label{font-weight:700;font-size:1rem}
+.hint{font-weight:500;color:var(--muted);font-size:.88rem}
+.req{color:var(--warn);font-size:.85rem;margin-left:4px;font-weight:700}
 input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:2px solid var(--line);
   border-radius:14px;padding:10px 12px;width:100%}
 textarea{min-height:6.5em;resize:vertical}
@@ -63,22 +56,44 @@ button{font:inherit;cursor:pointer}
 .send:disabled{opacity:.5;cursor:default}
 .field{display:flex;flex-direction:column;gap:6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{background:var(--bg);color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:4px 13px;font-size:.9rem}
-.chip[aria-pressed="true"]{background:var(--leaf-soft);border-color:var(--leaf)}
+.chip{background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:4px 13px;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
 .chips.warn .chip{border-color:var(--warn)}
+.divider{border-top:2px dashed var(--line);padding-top:12px}
 button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
 
-.toast{min-height:1.6em;font-size:.9rem;color:var(--leaf);font-weight:700}
+.toast{min-height:1.6em;font-size:.95rem;color:var(--leaf);font-weight:700}
 .toast.err{color:var(--warn)}
 
-.wall{display:flex;flex-wrap:wrap;gap:8px}
-.word{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 14px;animation:pop .35s ease-out}
-.word:nth-child(3n+2){border-color:var(--pink-line)}
-.word:nth-child(3n+3){border-color:var(--leaf-soft)}
-.word small{color:var(--muted);margin-left:4px}
-.word.mine{border-color:var(--soil)}
-.empty{color:var(--muted);font-size:.95rem}
-@keyframes pop{from{transform:scale(.85)}to{transform:none}}
-@media (prefers-reduced-motion: reduce){.word{animation:none}.door{transition:none}}
-.credit{color:var(--muted);font-size:.75rem;text-align:center}
-.credit a{color:inherit}
+/* ===== ことばの海 ===== */
+.seahead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.toggle{background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:2px 12px;font-size:.85rem}
+.sea{position:relative;border-radius:24px;overflow:hidden;padding-block:18px;
+  background:linear-gradient(180deg,var(--sea-top),var(--sea-bottom));display:flex;flex-direction:column;gap:12px}
+.sea::after{content:"";position:absolute;inset:auto 0 0 0;height:28px;pointer-events:none;
+  background:radial-gradient(18px 10px at 18px 28px,rgba(255,255,255,.35) 98%,transparent) 0 0/36px 28px repeat-x}
+.lane{display:flex;width:max-content;gap:10px;animation:drift var(--dur,40s) linear infinite}
+.lane.rev{animation-direction:reverse}
+.sea:hover .lane,.sea.paused .lane{animation-play-state:paused}
+.lane .w{flex:none}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+.w{display:inline-flex;align-items:center;gap:4px;background:var(--bubble);color:var(--sea-ink);border:2px solid var(--bubble-line);
+  border-radius:999px;padding:4px 14px;font-weight:700;white-space:nowrap;animation:bob 3.2s ease-in-out infinite}
+.w:nth-child(2n){animation-delay:-1.1s}
+.w:nth-child(3n){animation-delay:-2.2s}
+.w small{font-weight:500;opacity:.75}
+.w.mine{background:var(--new)}
+.w.fresh{box-shadow:0 0 0 3px var(--new)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+.list{display:flex;flex-wrap:wrap;gap:8px}
+.list .w{animation:none;background:var(--surface);color:var(--fg);border-color:var(--line)}
+.list .w.mine{background:var(--new);color:var(--sea-ink)}
+.empty{color:var(--muted);font-size:.95rem;padding-inline:18px}
+.sea .empty{color:var(--sea-ink)}
+
+@media (prefers-reduced-motion: reduce){
+  .lane,.w{animation:none!important}
+  .door{transition:none}
+}
