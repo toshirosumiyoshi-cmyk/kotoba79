@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>仮装パートへの声｜79緑 仮装ひろば</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<title>仮装パートへの声｜79緑 仮装のひろば</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main class="wrap">
-  <a class="back" href="index.html">← 仮装ひろば</a>
-  <header>
-    <h1>仮装パートへの声</h1>
+  <a class="back" href="index.html">← 仮装のひろば</a>
+  <header class="pagehead">
+    <h1>仮装パート<wbr>への声</h1>
+    <img src="images/pose_kyosyu_boy.png" alt="">
   </header>
-  <p class="lead">準備で不安なこと、意見、質問など、なんでも送ってください。ここに送ったものは仮装パートだけが読みます。</p>
+  <p class="lead">準備で不安なこと、意見、質問など、なんでも送ってください！</p>
 
   <form class="card" id="f" autocomplete="off">
     <div class="field">
-      <span id="catLabel"><b>どんな声？</b> <span class="hint">選ばなくてもOK</span></span>
+      <span class="label" id="catLabel">どんな声？<span class="req">※選択必須</span></span>
       <div class="chips" id="cat" role="group" aria-labelledby="catLabel"></div>
     </div>
     <div class="field">
@@ -32,6 +33,8 @@
     <div><button class="send" id="send" type="submit">送る</button></div>
     <p class="toast" id="toast" role="status"></p>
   </form>
+
+  <p class="credit">イラスト：<a href="https://www.irasutoya.com/" target="_blank" rel="noopener">いらすとや</a></p>
 </main>
 
 <script src="config.js"></script>
@@ -41,19 +44,16 @@ const H = window.Hiroba;
 const $ = id => document.getElementById(id);
 const cat = H.chipGroup($('cat'), ['準備で不安なこと', '意見', '質問', 'その他']);
 
-if (H.isClosed()) {
-  $('f').outerHTML = '<p class="closed">受付は10月31日で終わりました。ありがとうございました。</p>';
-}
-
-$('f') && $('f').addEventListener('submit', async ev => {
+$('f').addEventListener('submit', async ev => {
   ev.preventDefault();
+  if (!cat.value()) { $('cat').classList.add('warn'); H.toast($('toast'), 'どんな声かを1つ選んでください。', true); return; }
   const text = $('text').value.trim();
   if (!text) { H.toast($('toast'), '内容を書いてから送ってください。', true); return; }
   $('send').disabled = true;
   try {
     await H.post({ type: 'voice', category: cat.value(), text, name: $('name').value, hp: $('hp').value });
     $('text').value = ''; cat.reset();
-    H.toast($('toast'), '送りました。ありがとう。');
+    H.toast($('toast'), '送りました。');
   } catch (e) {
     H.toast($('toast'), H.errorText(e), true);
   } finally {

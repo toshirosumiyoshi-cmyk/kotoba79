@@ -1,66 +1,84 @@
-/* 79緑 仮装ひろば：1カラム、緑の葉と土の色。ことばはチップで並べる */
+/* 79緑 仮装のひろば：1カラム。緑と白にピンクをひとさじ、丸ゴシックで、いらすとやのイラストを添える */
 :root{
-  --bg:#f2f6f0; --surface:#ffffff; --fg:#16241b; --muted:#5b6e61; --line:#d3ded4;
-  --leaf:#1f7a4a; --leaf-ink:#ffffff; --leaf-soft:#dcefe2; --soil:#7a5a36; --warn:#b3541e;
-  --display:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
-  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+  --bg:#f3f8f1; --dot:#dcebd8; --surface:#ffffff; --fg:#1b2a20; --muted:#5e7065; --line:#d6e3d6;
+  --leaf:#2a8a55; --leaf-ink:#ffffff; --leaf-soft:#dff1e4;
+  --pink:#f6c9d4; --pink-ink:#5a2433; --pink-line:#eaa9b9;
+  --soil:#b07a45; --warn:#c0532a;
+  --round:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
-  :root{ --bg:#0f1712; --surface:#17221a; --fg:#e5eee7; --muted:#9bb0a1; --line:#2b3a2f;
-    --leaf:#5fc48a; --leaf-ink:#0f1712; --leaf-soft:#1e3828; --soil:#c9a57a; --warn:#f0a26f; color-scheme:dark }
+  :root{ --bg:#0f1712; --dot:#1a2a1f; --surface:#17221a; --fg:#e6efe8; --muted:#9db1a2; --line:#2c3c30;
+    --leaf:#62c78e; --leaf-ink:#0f1712; --leaf-soft:#1f3a2a;
+    --pink:#4a2a33; --pink-ink:#ffdbe3; --pink-line:#7a4554;
+    --soil:#d9a873; --warn:#f0a26f; color-scheme:dark }
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;
-  padding-inline:16px;padding-block:28px 64px}
-.wrap{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
-h1,h2{font-family:var(--display);line-height:1.35;margin:0;text-wrap:balance}
-h1{font-size:1.75rem}
+body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.5px,transparent 1.6px);background-size:22px 22px;
+  color:var(--fg);font-family:var(--round);font-weight:500;font-size:16px;line-height:1.8;
+  padding-inline:16px;padding-block:24px 64px}
+.wrap{max-width:620px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2{line-height:1.35;margin:0;text-wrap:balance;font-weight:700}
+h1{font-size:1.9rem}
 h2{font-size:1.2rem}
 p{margin:0}
 a{color:var(--leaf)}
-.eyebrow{font-size:.8rem;letter-spacing:.08em;color:var(--muted)}
 .lead{color:var(--muted)}
-.back{font-size:.9rem;text-decoration:none}
+.back{font-size:.9rem;text-decoration:none;font-weight:700}
+
+/* トップの見出し：旗をふる2人で名前をはさむ */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:6px;text-align:center}
+.hero img{width:100%;max-width:120px;height:auto;justify-self:center}
+.hero h1{font-size:2.1rem;padding-bottom:10px}
+.hero h1 span{display:block;font-size:.8rem;color:var(--leaf);letter-spacing:.12em}
+
+/* ページの見出し：右にイラスト */
+.pagehead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pagehead h1{font-size:1.65rem;word-break:keep-all;min-width:0}
+.pagehead img{width:96px;max-width:30%;height:auto;flex:none}
 
 .doors{display:grid;gap:14px}
-.door{display:flex;flex-direction:column;gap:4px;padding:22px 20px;border-radius:16px;text-decoration:none;
-  background:var(--surface);border:1.5px solid var(--line);color:var(--fg)}
-.door.main{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
-.door b{font-family:var(--display);font-size:1.3rem}
-.door span{font-size:.9rem;opacity:.85}
+.door{display:flex;align-items:center;gap:14px;padding:18px 18px;border-radius:22px;text-decoration:none;
+  border:2px solid transparent;color:var(--fg);transition:transform .15s ease}
+.door:hover{transform:translateY(-2px)}
+.door > div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.door img{width:84px;height:auto;flex:none}
+.door b{font-size:1.3rem}
+.door span{font-size:.9rem;opacity:.9}
+.door.main{background:var(--leaf);color:var(--leaf-ink)}
+.door.sub{background:var(--pink);color:var(--pink-ink);border-color:var(--pink-line)}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
-label{font-weight:700;font-size:.95rem}
-.hint{font-weight:400;color:var(--muted);font-size:.85rem}
-input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);
-  border-radius:10px;padding:10px 12px;width:100%}
-textarea{min-height:7em;resize:vertical}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:16px}
+label,.label{font-weight:700;font-size:.95rem}
+.hint{font-weight:500;color:var(--muted);font-size:.85rem}
+.req{color:var(--warn);font-size:.8rem;margin-left:4px}
+input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:2px solid var(--line);
+  border-radius:14px;padding:10px 12px;width:100%}
+textarea{min-height:6.5em;resize:vertical}
 .row{display:flex;gap:8px}
 .row input{flex:1;min-width:0}
 button{font:inherit;cursor:pointer}
-.send{background:var(--leaf);color:var(--leaf-ink);border:0;border-radius:10px;padding:10px 20px;font-weight:700;white-space:nowrap}
+.send{background:var(--leaf);color:var(--leaf-ink);border:0;border-radius:14px;padding:10px 22px;font-weight:700;white-space:nowrap}
 .send:disabled{opacity:.5;cursor:default}
 .field{display:flex;flex-direction:column;gap:6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem}
+.chip{background:var(--bg);color:var(--fg);border:2px solid var(--line);border-radius:999px;padding:4px 13px;font-size:.9rem}
 .chip[aria-pressed="true"]{background:var(--leaf-soft);border-color:var(--leaf)}
-details summary{cursor:pointer;color:var(--muted);font-size:.9rem}
-details[open] summary{margin-bottom:10px}
-details > div{display:flex;flex-direction:column;gap:14px}
-button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
+.chips.warn .chip{border-color:var(--warn)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--leaf);outline-offset:2px}
 
-.toast{min-height:1.6em;font-size:.9rem;color:var(--leaf)}
+.toast{min-height:1.6em;font-size:.9rem;color:var(--leaf);font-weight:700}
 .toast.err{color:var(--warn)}
 
 .wall{display:flex;flex-wrap:wrap;gap:8px}
-.word{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-family:var(--display);
-  animation:pop .35s ease-out}
-.word small{color:var(--muted);font-family:var(--body);margin-left:4px}
+.word{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 14px;animation:pop .35s ease-out}
+.word:nth-child(3n+2){border-color:var(--pink-line)}
+.word:nth-child(3n+3){border-color:var(--leaf-soft)}
+.word small{color:var(--muted);margin-left:4px}
 .word.mine{border-color:var(--soil)}
 .empty{color:var(--muted);font-size:.95rem}
-.closed{background:var(--surface);border:1.5px dashed var(--line);border-radius:14px;padding:18px;color:var(--muted)}
 @keyframes pop{from{transform:scale(.85)}to{transform:none}}
-@media (prefers-reduced-motion: reduce){.word{animation:none}}
-footer{color:var(--muted);font-size:.8rem}
+@media (prefers-reduced-motion: reduce){.word{animation:none}.door{transition:none}}
+.credit{color:var(--muted);font-size:.75rem;text-align:center}
+.credit a{color:inherit}
